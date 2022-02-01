@@ -1,15 +1,27 @@
-const Admin = require('../../modells/users/admin');
+const Markter = require('../../modells/users/markter');
 
+exports.getUsersData = (req, res, next) => {
+    Markter.find()
+        .then(markters => {
+            res.send(markters);
+        })
+        .catch(err => {
+            res.status(500).send({
+                "res": err
+            })
+        })
+}
 exports.getUserData = (req, res, next) => {
-    Admin.findOne()
-        .then(admin => {
-            if (!admin) {
+    const id = req.params.id
+    Markter.findById(id)
+        .then(markter => {
+            if (!markter) {
                 res.status(200).send({
                     "res": 'not found'
                 })
             } else {
                 res.status(200).send({
-                    "res": admin
+                    "res": markter
                 })
             }
         })
@@ -27,14 +39,14 @@ exports.createUser = (req, res, next) => {
     const email = req.body.email;
     const phone = req.body.phone;
 
-    const admin = new Admin({
+    const markter = new Markter({
         name: name,
         password: password,
         address: address,
         email: email,
         phone: phone,
     })
-    admin.save()
+    markter.save()
         .then(result => {
             res.status(200).send({
                 "res": result
@@ -48,6 +60,7 @@ exports.createUser = (req, res, next) => {
 }
 
 exports.updateUser = (req, res, next) => {
+    const id = req.params.id;
     const name = req.body.name;
     const password = req.body.password;
     const address = req.body.address;
@@ -57,7 +70,7 @@ exports.updateUser = (req, res, next) => {
         withdrawable: req.body.withdrawable,
         pending: req.body.pending
     }
-    const newAdmin = {
+    const newmarkter = {
         name: req.body.name,
         password: req.body.password,
         address: req.body.address,
@@ -68,7 +81,9 @@ exports.updateUser = (req, res, next) => {
             pending: req.body.pending
         }
     }
-    Admin.findOneAndUpdate({}, newAdmin, {
+    Markter.findOneAndUpdate({
+            _id: id
+        }, newmarkter, {
             new: true
         })
         .then(result => {

@@ -31,3 +31,4 @@ const markterSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId, ref: 'Order'
     }
 })
+module.exports = mongoose.model('Markter', markterSchema)

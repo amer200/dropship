@@ -9,12 +9,12 @@ app.use(bodyParser.json());
 
 // router
 const adminRoutes = require('./routes/users/admin');
-// const sellerRoutes = require('./routes/users/seller');
-// const markterRoutes = require('./routes/users/markter');
+const sellerRoutes = require('./routes/users/seller');
+const markterRoutes = require('./routes/users/markter');
 
 app.use('/admin', adminRoutes);
-// app.use('/seller', sellerRoutes);
-// app.use('/markter', markterRoutes);
+app.use('/seller', sellerRoutes);
+app.use('/markter', markterRoutes);
 
 
 

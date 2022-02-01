@@ -1,15 +1,27 @@
-const Admin = require('../../modells/users/admin');
+const Seller = require('../../modells/users/seller');
 
+exports.getUsersData = (req, res, next) => {
+    Seller.find()
+        .then(sellers => {
+            res.send(sellers);
+        })
+        .catch(err => {
+            res.status(500).send({
+                "res": err
+            })
+        })
+}
 exports.getUserData = (req, res, next) => {
-    Admin.findOne()
-        .then(admin => {
-            if (!admin) {
+    const id = req.params.id
+    Seller.findById(id)
+        .then(seller => {
+            if (!seller) {
                 res.status(200).send({
                     "res": 'not found'
                 })
             } else {
                 res.status(200).send({
-                    "res": admin
+                    "res": markter
                 })
             }
         })
@@ -27,14 +39,14 @@ exports.createUser = (req, res, next) => {
     const email = req.body.email;
     const phone = req.body.phone;
 
-    const admin = new Admin({
+    const seller = new Seller({
         name: name,
         password: password,
         address: address,
         email: email,
         phone: phone,
     })
-    admin.save()
+    seller.save()
         .then(result => {
             res.status(200).send({
                 "res": result
@@ -48,6 +60,7 @@ exports.createUser = (req, res, next) => {
 }
 
 exports.updateUser = (req, res, next) => {
+    const id = req.params.id;
     const name = req.body.name;
     const password = req.body.password;
     const address = req.body.address;
@@ -57,7 +70,7 @@ exports.updateUser = (req, res, next) => {
         withdrawable: req.body.withdrawable,
         pending: req.body.pending
     }
-    const newAdmin = {
+    const newseller = {
         name: req.body.name,
         password: req.body.password,
         address: req.body.address,
@@ -68,7 +81,9 @@ exports.updateUser = (req, res, next) => {
             pending: req.body.pending
         }
     }
-    Admin.findOneAndUpdate({}, newAdmin, {
+    Seller.findOneAndUpdate({
+            _id: id
+        }, newseller, {
             new: true
         })
         .then(result => {
